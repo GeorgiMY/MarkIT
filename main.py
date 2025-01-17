@@ -8,15 +8,16 @@ import time
 
 def get_twitch_markers():
     # Set up Chrome options to use existing profile
+    vod_id = input('Enter the vod id: ')
     chrome_options = Options()
     chrome_options.add_argument("user-data-dir=C:/Users/MSI/AppData/Local/Google/Chrome/User Data")  # Windows path
+    chrome_options.add_argument("--headless=new")  # Use headless mode
 
     # Initialize Chrome WebDriver with options
     driver = webdriver.Chrome(options=chrome_options)
     
     try:
         # Get vod ID from user
-        vod_id = input('Enter the vod id: ')
         url = f'https://dashboard.twitch.tv/u/georgi_my/content/video-producer/highlighter/{vod_id}'
         
         # Navigate to the page
@@ -38,18 +39,26 @@ def get_twitch_markers():
             try:
                 # Scroll element into view
                 driver.execute_script("arguments[0].scrollIntoView(true);", icon)
-                time.sleep(0.5)  # Brief pause for scroll to complete
+                time.sleep(0.1)  # Brief pause for scroll to complete
                 
                 # Hover over the element
                 actions.move_to_element(icon).perform()
-                time.sleep(0.5)  # Wait for tooltip to appear
+                time.sleep(0.2)  # Wait for tooltip to appear
                 
-                # Find and get text from the VzRGo class element
-                marker_text = wait.until(EC.presence_of_element_located(
-                    (By.CLASS_NAME, "VzRGo")
-                )).text
+                # Find all VzRGo elements that appear
+                marker_elements = driver.find_elements(By.CLASS_NAME, "VzRGo")
                 
-                markers.append(marker_text)
+                # Get text from each VzRGo element
+                for element in marker_elements:
+                    try:
+                        marker_text = element.text
+                        if marker_text:  # Only add non-empty markers
+                            markers.append(marker_text)
+                    except:
+                        continue
+                
+                # Brief pause before moving to next cluster
+                time.sleep(0.1)
                 
             except Exception as e:
                 print(f"Error processing marker: {str(e)}")

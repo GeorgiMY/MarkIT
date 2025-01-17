@@ -1,7 +1,10 @@
-Requirements:
+How to use:
 1. You can't have chrome opened
 2. You have to be logged in your twitch with chrome
-3. Supply the vod id when prompted at the console: (example: 2351186815)
+3. Change "georgi_my" with your twitch username at the "url" variable
+4. Change "MSI" with your computer user at "chrome_options.add_argument..."
+4. Supply the vod id when prompted at the console:
+(example: 2351186815)
 https://dashboard.twitch.tv/u/georgi_my/content/video-producer/highlighter/2351186815
 
 Use case:
